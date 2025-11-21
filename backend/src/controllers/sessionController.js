@@ -76,9 +76,12 @@ export async function serveFile(req, res) {
     const { sessionId } = req.params;
     const filePath = req.params[0]; // Everything after /files/
 
+    console.log(`📂 Serving file: ${filePath}`);
+
     // Validate session
     const session = getSession(sessionId);
     if (!session) {
+      console.log(`❌ Session not found: ${sessionId}`);
       return res.status(404).json({
         error: 'Session not found or expired'
       });
@@ -87,6 +90,8 @@ export async function serveFile(req, res) {
     // Prevent directory traversal
     const safePath = path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
     const fullPath = path.join(session.directory, safePath);
+
+    console.log(`📁 Full path: ${fullPath}`);
 
     // Ensure path is within session directory
     if (!fullPath.startsWith(session.directory)) {
@@ -99,7 +104,10 @@ export async function serveFile(req, res) {
     // Check file exists
     try {
       await fs.access(fullPath);
+      console.log(`✅ File exists: ${safePath}`);
     } catch (error) {
+      console.log(`❌ File not found: ${safePath}`);
+      console.log(`❌ Tried path: ${fullPath}`);
       return res.status(404).json({
         error: 'File not found',
         file: safePath
