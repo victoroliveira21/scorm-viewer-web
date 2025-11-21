@@ -60,14 +60,24 @@ if (process.env.ENABLE_CORS === 'true') {
     ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
     : ['http://localhost:5173'];
 
+  console.log('🔒 CORS allowed origins:', allowedOrigins);
+
   const corsOptions = {
     origin: (origin, callback) => {
+      console.log('🌐 Request from origin:', origin);
+
       // Allow requests with no origin (like mobile apps or curl)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        console.log('✅ Allowing request with no origin');
+        return callback(null, true);
+      }
 
       if (allowedOrigins.includes(origin)) {
+        console.log('✅ Origin allowed:', origin);
         callback(null, true);
       } else {
+        console.log('❌ Origin NOT allowed:', origin);
+        console.log('❌ Allowed origins are:', allowedOrigins);
         callback(new Error('Not allowed by CORS'));
       }
     },
