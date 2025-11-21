@@ -24,6 +24,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy - Required for Railway and other reverse proxies
+app.set('trust proxy', true);
+
 // ============================================
 // SECURITY MIDDLEWARE
 // ============================================
