@@ -7,7 +7,8 @@ interface ViewerProps {
 }
 
 const Viewer: React.FC<ViewerProps> = ({ sessionId, title, onClose }) => {
-  const viewerUrl = `/api/sessions/${sessionId}/viewer`;
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  const viewerUrl = `${apiUrl}/api/sessions/${sessionId}/viewer`;
 
   return (
     <div className="viewer-overlay">
