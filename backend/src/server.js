@@ -89,6 +89,8 @@ if (process.env.ENABLE_RATE_LIMIT === 'true') {
     },
     standardHeaders: true,
     legacyHeaders: false,
+    // Disable validation warnings for Railway proxy setup
+    validate: { trustProxy: false }
   });
 
   app.use('/api/upload', limiter);
