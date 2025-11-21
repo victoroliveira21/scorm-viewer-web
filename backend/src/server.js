@@ -33,6 +33,11 @@ app.set('trust proxy', true);
 
 // Helmet - Security headers
 if (process.env.ENABLE_HELMET === 'true') {
+  // Get allowed origins for frame-ancestors
+  const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+    : ['http://localhost:5173'];
+
   app.use(helmet({
     contentSecurityPolicy: {
       directives: {
@@ -45,7 +50,8 @@ if (process.env.ENABLE_HELMET === 'true') {
         fontSrc: ["'self'", "data:"],
         objectSrc: ["'none'"],
         mediaSrc: ["'self'", "data:", "blob:"],
-        frameSrc: ["'self'"]
+        frameSrc: ["'self'"],
+        frameAncestors: ["'self'", ...allowedOrigins] // Allow framing from allowed origins
       }
     },
     crossOriginEmbedderPolicy: false, // Required for iframe embedding
